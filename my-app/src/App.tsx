@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import LoginScreen from './components/LoginScreen';
-import { SignupScreen } from './components/SignupScreen';
-import { SignupFormScreen } from './components/SignupFormScreen';
+import SignupScreen from './components/SignupScreen';
+import SignupFormScreen from './components/SignupFormScreen';
 import { HeaderV3 } from './components/HeaderV3';
 import { CalendarV2 } from './components/CalendarV2';
 import { BottomPanelV2 } from './components/BottomPanelV2';
