@@ -18,8 +18,8 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Switch } from './ui/switch';
 import { useCalendar } from '../contexts/CalendarContext';
-import { Calendar } from '../types/calendar';
-import { toast } from 'sonner@2.0.3';
+import type { Calendar } from '../types/calendar';
+import { toast } from 'sonner';
 
 interface CalendarManagementModalProps {
   isOpen: boolean;
@@ -54,8 +54,8 @@ const CalendarManagementModal: React.FC<CalendarManagementModalProps> = ({
     addCalendar, 
     updateCalendar, 
     deleteCalendar, 
-    toggleCalendarVisibility,
-    setCurrentCalendar 
+    
+     
   } = useCalendar();
   
   const [isCreating, setIsCreating] = useState(false);
@@ -296,7 +296,7 @@ const CalendarManagementModal: React.FC<CalendarManagementModalProps> = ({
                   </div>
                   <Switch
                     checked={formData.isVisible}
-                    onCheckedChange={(checked) => setFormData({ ...formData, isVisible: checked })}
+                    onCheckedChange={(checked: boolean) => setFormData({ ...formData, isVisible: checked })}
                   />
                 </div>
 
@@ -315,7 +315,7 @@ const CalendarManagementModal: React.FC<CalendarManagementModalProps> = ({
                       </div>
                       <Switch
                         checked={formData.isShared}
-                        onCheckedChange={(checked) => setFormData({ ...formData, isShared: checked })}
+                        onCheckedChange={(checked: boolean) => setFormData({ ...formData, isShared: checked })}
                       />
                     </div>
                     {formData.isShared && (
@@ -420,7 +420,7 @@ const CalendarManagementModal: React.FC<CalendarManagementModalProps> = ({
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={(e) => {
+                                onClick={(e: React.MouseEvent) => {
                                   e.stopPropagation();
                                   handleEdit(calendar);
                                 }}
@@ -435,7 +435,7 @@ const CalendarManagementModal: React.FC<CalendarManagementModalProps> = ({
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={(e) => {
+                                  onClick={(e: React.MouseEvent) => {
                                     e.stopPropagation();
                                     handleDelete(calendar);
                                   }}
@@ -527,7 +527,7 @@ const CalendarManagementModal: React.FC<CalendarManagementModalProps> = ({
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={(e) => {
+                                onClick={(e: React.MouseEvent) => {
                                   e.stopPropagation();
                                   handleEdit(calendar);
                                 }}
@@ -541,7 +541,7 @@ const CalendarManagementModal: React.FC<CalendarManagementModalProps> = ({
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={(e) => {
+                                onClick={(e: React.MouseEvent) => {
                                   e.stopPropagation();
                                   handleDelete(calendar);
                                 }}

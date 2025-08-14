@@ -23,11 +23,8 @@ export const IndependentCalendarWrapper: React.FC<IndependentCalendarWrapperProp
 // useCalendar hook을 독립 캘린더 컨텍스트로 오버라이드
 export const useCalendar = () => {
   const overrideContext = useContext(CalendarOverrideContext);
-  if (overrideContext) {
-    return overrideContext;
+  if (overrideContext === undefined || overrideContext === null) {
+    throw new Error('useCalendar must be used within an IndependentCalendarWrapper');
   }
-  
-  // 기본적으로는 원래 CalendarContext를 사용
-  const { useCalendar: originalUseCalendar } = require('../contexts/CalendarContext');
-  return originalUseCalendar();
+  return overrideContext;
 };

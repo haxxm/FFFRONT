@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { User, Calendar as CalendarIcon, Menu } from 'lucide-react';
+import { User, Menu } from 'lucide-react';
 import { Button } from './ui/button';
 import { IndependentCalendarProvider } from './IndependentCalendarProvider';
 import IndependentCalendarCore from './IndependentCalendarCore';
@@ -27,8 +27,7 @@ const CalendarViewScreen: React.FC<CalendarViewScreenProps> = ({
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <IndependentCalendarProvider 
-        sourceCalendar={calendar} 
-        instanceId={`calendar-view-${calendar.id}-${Date.now()}`}
+        sourceCalendar={calendar}
       >
         {/* Header */}
         <div className="bg-background">

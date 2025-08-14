@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface PastScheduleModalProps {
   isOpen: boolean;
@@ -52,7 +52,7 @@ const PastScheduleModal: React.FC<PastScheduleModalProps> = ({ isOpen, onClose }
   };
 
   // AI 이미지 분석 (모의 함수)
-  const analyzeImageWithAI = async (imageUrl: string, fileName: string): Promise<any> => {
+  const analyzeImageWithAI = async (): Promise<any> => {
     // 실제 구현에서는 여기서 AI API를 호출합니다
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -116,7 +116,7 @@ const PastScheduleModal: React.FC<PastScheduleModalProps> = ({ isOpen, onClose }
 
         // AI 분석 시작
         try {
-          const analysis = await analyzeImageWithAI(url, file.name);
+          const analysis = await analyzeImageWithAI();
           
           setUploadedImages(prev => 
             prev.map(img => 
@@ -333,7 +333,7 @@ const PastScheduleModal: React.FC<PastScheduleModalProps> = ({ isOpen, onClose }
                         <Button
                           size="sm"
                           variant={image.addToCalendar ? "default" : "outline"}
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             toggleAddToCalendar(image.id);
                           }}
@@ -348,7 +348,7 @@ const PastScheduleModal: React.FC<PastScheduleModalProps> = ({ isOpen, onClose }
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             handleRemoveImage(image.id);
                           }}

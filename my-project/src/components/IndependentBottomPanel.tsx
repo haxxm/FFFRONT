@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Edit, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 
 import { useIndependentCalendar } from './IndependentCalendarProvider';
-import { EventCategory } from '../types/calendar';
+import type { EventCategory } from '../types/calendar';
 import EventModal from './EventModal';
 
 const categoryLabels: Record<EventCategory, string> = {
@@ -17,7 +17,7 @@ const categoryLabels: Record<EventCategory, string> = {
 };
 
 const IndependentBottomPanel = () => {
-  const { state, dispatch, deleteEvent } = useIndependentCalendar();
+  const { state, deleteEvent } = useIndependentCalendar();
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
 
@@ -200,7 +200,7 @@ const IndependentBottomPanel = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           handleEditEvent(event);
                         }}
@@ -211,7 +211,7 @@ const IndependentBottomPanel = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           handleDeleteEvent(event.id);
                         }}

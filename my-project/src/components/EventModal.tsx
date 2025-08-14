@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { X, Clock, Calendar as CalendarIcon, Tag, Settings } from 'lucide-react';
+import { Clock, Calendar as CalendarIcon, Tag, Settings } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Switch } from './ui/switch';
-import { Event, EventCategory } from '../types/calendar';
+import type { Event, EventCategory } from '../types/calendar';
 import { useContextualCalendar } from './ContextSwitch';
 import EventOptionsModal from './EventOptionsModal';
-import RepeatSettingsModal, { RepeatSettings } from './RepeatSettingsModal';
+import RepeatSettingsModal, { type RepeatSettings } from './RepeatSettingsModal';
 import FileManagerModal from './FileManagerModal';
 
 interface EventModalProps {
@@ -339,7 +339,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, event, date })
             <label className="text-sm font-medium">하루 종일</label>
             <Switch
               checked={formData.isAllDay}
-              onCheckedChange={(checked) => setFormData({ ...formData, isAllDay: checked })}
+              onCheckedChange={(checked: boolean) => setFormData({ ...formData, isAllDay: checked })}
             />
           </div>
 

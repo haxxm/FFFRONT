@@ -7,16 +7,15 @@ import {
   Trash2, 
   RefreshCw,
   Clock,
-  X,
-  Settings
+  X
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
-import { VisuallyHidden } from './ui/visually-hidden';
+
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import { Badge } from './ui/badge';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface SessionManagerProps {
   isOpen: boolean;

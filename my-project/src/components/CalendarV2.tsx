@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useCalendar } from '../contexts/CalendarContext';
-import { Event } from '../types/calendar';
+import type { Event } from '../types/calendar';
 import EventModal from './EventModal';
 import DayEventsModal from './DayEventsModal';
 

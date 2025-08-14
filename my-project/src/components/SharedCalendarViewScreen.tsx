@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { User, Calendar as CalendarIcon, Menu, Users, Hash, MessageSquare, ArrowLeft } from 'lucide-react';
+import { User, Menu, Users, Hash, ArrowLeft } from 'lucide-react';
 import { Button } from './ui/button';
 import { IndependentCalendarProvider } from './IndependentCalendarProvider';
 import IndependentCalendarCore from './IndependentCalendarCore';
@@ -38,7 +38,6 @@ const SharedCalendarViewScreen: React.FC<SharedCalendarViewScreenProps> = ({
     <div className="min-h-screen bg-background flex flex-col">
       <IndependentCalendarProvider 
         sourceCalendar={calendar} 
-        instanceId={`shared-calendar-view-${calendar.id}-${Date.now()}`}
       >
         {/* Header */}
         <div className="bg-background">

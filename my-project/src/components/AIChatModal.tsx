@@ -7,7 +7,7 @@ import { VisuallyHidden } from './ui/visually-hidden';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useCalendar } from '../contexts/CalendarContext';
-import { Event } from '../types/calendar';
+import type { Event } from '../types/calendar';
 
 interface AIChatModalProps {
   isOpen: boolean;
@@ -99,17 +99,15 @@ const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => {
     return {
       id: Date.now().toString(),
       title,
-      date: targetDate.toISOString().split('T')[0],
-      time,
+      date: targetDate,
+      startTime: time,
       endTime,
       category: 'work',
       description: `AI가 생성한 일정: ${text}`,
-      location: '',
-      attendees: [],
       isAllDay: false,
       reminder: 15,
-      repeat: 'none',
-      color: '#000000'
+      color: '#000000',
+      calendarId: 'default'
     };
   };
 
@@ -199,9 +197,7 @@ const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const removeFile = (index: number) => {
-    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
-  };
+  
 
   const handleAddEvent = (event: Event) => {
     setMessages(prev => prev.map(msg => 
@@ -305,8 +301,8 @@ const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => {
           pointerEvents: 'auto'
         }}
         aria-describedby="ai-chat-modal-description"
-        onPointerDownOutside={(e) => e.preventDefault()} // 외부 클릭 시 배경 스크롤 방지
-        onInteractOutside={(e) => e.preventDefault()}
+        onPointerDownOutside={(e: any) => e.preventDefault()} // 외부 클릭 시 배경 스크롤 방지
+        onInteractOutside={(e: any) => e.preventDefault()}
       >
         <VisuallyHidden>
           <DialogTitle>AI 채팅</DialogTitle>
@@ -390,7 +386,7 @@ const AIChatModal: React.FC<AIChatModalProps> = ({ isOpen, onClose }) => {
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           <Clock className="w-3 h-3" />
-                          <span>{msg.eventProposal.time} - {msg.eventProposal.endTime}</span>
+                          <span>{msg.eventProposal.startTime} - {msg.eventProposal.endTime}</span>
                         </div>
                       </div>
                       

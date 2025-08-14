@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Plus, List, Edit, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Edit, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 
 import { useCalendar } from '../contexts/CalendarContext';
-import { EventCategory } from '../types/calendar';
+import type { EventCategory } from '../types/calendar';
 import EventModal from './EventModal';
 
 const categoryLabels: Record<EventCategory, string> = {
@@ -17,10 +17,10 @@ const categoryLabels: Record<EventCategory, string> = {
 };
 
 const BottomPanelV2 = () => {
-  const { state, dispatch, deleteEvent } = useCalendar();
+  const { state, deleteEvent } = useCalendar();
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
-  const [showEventList, setShowEventList] = useState(false);
+  const [showEventList] = useState(false);
 
   const formatSelectedDate = (date: Date | null) => {
     if (!date) return null;
@@ -124,7 +124,7 @@ const BottomPanelV2 = () => {
     return null;
   };
 
-  const formattedDate = formatSelectedDate(state.selectedDate);
+  
   const filteredEvents = getFilteredEvents();
 
   const handleEditEvent = (event: any) => {
@@ -194,7 +194,7 @@ const BottomPanelV2 = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             handleEditEvent(event);
                           }}
@@ -205,7 +205,7 @@ const BottomPanelV2 = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             handleDeleteEvent(event.id);
                           }}

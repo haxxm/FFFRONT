@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, Calendar as CalendarIcon, QrCode, Copy, Share2 } from 'lucide-react';
+import { Calendar as CalendarIcon, Copy, Share2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
 import { VisuallyHidden } from './ui/visually-hidden';
 import { Button } from './ui/button';
 import { useCalendar } from '../contexts/CalendarContext';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface FriendInviteModalProps {
   isOpen: boolean;

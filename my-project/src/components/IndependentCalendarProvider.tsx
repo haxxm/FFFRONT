@@ -1,7 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { Event, EventCategory, ViewMode, CalendarState, Calendar } from '../types/calendar';
+import React, { createContext, useContext, useReducer } from 'react';
+import type { Event, EventCategory, ViewMode, CalendarState, Calendar } from '../types/calendar';
 import { IndependentCalendarFlag } from './ContextSwitch';
 
 type CalendarAction = 
@@ -136,13 +136,12 @@ const calendarReducer = (state: CalendarState, action: CalendarAction): Calendar
 interface IndependentCalendarProviderProps {
   children: React.ReactNode;
   sourceCalendar: Calendar;
-  instanceId: string;
 }
 
 export const IndependentCalendarProvider: React.FC<IndependentCalendarProviderProps> = ({ 
   children, 
   sourceCalendar,
-  instanceId
+  
 }) => {
   // 각 독립 캘린더는 새로운 기본 캘린더로 시작
   const createIndependentCalendar = (): Calendar => ({

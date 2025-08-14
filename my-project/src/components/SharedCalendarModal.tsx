@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { X, Copy, Check, Users, MessageSquare, Send, Hash, Share, Calendar as CalendarIcon } from 'lucide-react';
+import { Copy, Check, MessageSquare, Send, Hash, Calendar as CalendarIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
 import { VisuallyHidden } from './ui/visually-hidden';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { ScrollArea } from './ui/scroll-area';
-import { Avatar } from './ui/avatar';
-import { Separator } from './ui/separator';
+
+
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './ui/resizable';
-import { toast } from 'sonner@2.0.3';
-import AntIcon from './AntIcon';
+import { toast } from 'sonner';
+
 import CalendarV2 from './CalendarV2';
-import HeaderV3 from './HeaderV3';
+
 import { CalendarProvider } from '../contexts/CalendarContext';
 
 interface SharedCalendarModalProps {

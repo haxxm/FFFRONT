@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Share2, Copy, Link, Eye, Edit, Clock, Users, Check, QrCode, Mail } from 'lucide-react';
+import { Share2, Copy, Link, Eye, Clock, Users, Check, QrCode, Mail } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card } from './ui/card';
@@ -146,7 +146,7 @@ const CalendarSharingModal: React.FC<CalendarSharingModalProps> = ({
               </div>
               <Switch
                 checked={shareSettings.isPublic}
-                onCheckedChange={(checked) => 
+                onCheckedChange={(checked: boolean) => 
                   setShareSettings(prev => ({ ...prev, isPublic: checked }))
                 }
               />
@@ -160,7 +160,7 @@ const CalendarSharingModal: React.FC<CalendarSharingModalProps> = ({
               </div>
               <Switch
                 checked={shareSettings.allowEdit}
-                onCheckedChange={(checked) => 
+                onCheckedChange={(checked: boolean) => 
                   setShareSettings(prev => ({ ...prev, allowEdit: checked }))
                 }
               />
@@ -174,7 +174,7 @@ const CalendarSharingModal: React.FC<CalendarSharingModalProps> = ({
               </div>
               <Switch
                 checked={shareSettings.requireApproval}
-                onCheckedChange={(checked) => 
+                onCheckedChange={(checked: boolean) => 
                   setShareSettings(prev => ({ ...prev, requireApproval: checked }))
                 }
               />

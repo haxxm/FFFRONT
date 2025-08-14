@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Users, Search, Filter, Plus, Share2, Lock, Globe, Sparkles, ArrowRight, Clock, Hash, MessageCircle } from 'lucide-react';
+import { Calendar, Users, Search, Plus, Share2, Lock, Globe, Sparkles, ArrowRight, Clock, Hash, MessageCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Card } from './ui/card';
@@ -146,7 +146,7 @@ const SharedCalendarListScreen: React.FC<SharedCalendarListScreenProps> = ({ onN
   ];
 
   // 모든 공유 캘린더 (내 캘린더 + 가입한 커뮤니티 캘린더)
-  const allSharedCalendars = [...mySharedCalendars, ...joinedCommunityCalendars];
+  
 
   const filteredMyCalendars = mySharedCalendars.filter(calendar => {
     const matchesSearch = calendar.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -430,7 +430,7 @@ const SharedCalendarListScreen: React.FC<SharedCalendarListScreenProps> = ({ onN
                               ? "bg-gray-600 hover:bg-gray-700 text-white h-8 cursor-not-allowed"
                               : "bg-purple-600 hover:bg-purple-700 text-white h-8"
                           }
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             if (calendar.members < calendar.maxMembers || calendar.isOwnedByMe) {
                               handleMyCalendarClick(calendar);
@@ -444,7 +444,7 @@ const SharedCalendarListScreen: React.FC<SharedCalendarListScreenProps> = ({ onN
                           variant="ghost"
                           size="sm"
                           className="text-gray-400 hover:text-white h-8"
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             handleOpenChatbot(calendar);
                           }}
@@ -456,7 +456,7 @@ const SharedCalendarListScreen: React.FC<SharedCalendarListScreenProps> = ({ onN
                           variant="ghost"
                           size="sm"
                           className="text-gray-400 hover:text-white h-8"
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             handleOpenSharingModal(calendar);
                           }}
@@ -591,7 +591,7 @@ const SharedCalendarListScreen: React.FC<SharedCalendarListScreenProps> = ({ onN
                                 ? "bg-gray-600 hover:bg-gray-700 text-white h-8 cursor-not-allowed"
                                 : "bg-green-600 hover:bg-green-700 text-white h-8"
                             }
-                            onClick={(e) => {
+                            onClick={(e: React.MouseEvent) => {
                               e.stopPropagation();
                               if (calendar.members < calendar.maxMembers) {
                                 handleMyCalendarClick(calendar);
@@ -605,7 +605,7 @@ const SharedCalendarListScreen: React.FC<SharedCalendarListScreenProps> = ({ onN
                             variant="ghost"
                             size="sm"
                             className="text-gray-400 hover:text-white h-8"
-                            onClick={(e) => {
+                            onClick={(e: React.MouseEvent) => {
                               e.stopPropagation();
                               handleOpenChatbot(calendar);
                             }}
@@ -617,7 +617,7 @@ const SharedCalendarListScreen: React.FC<SharedCalendarListScreenProps> = ({ onN
                             variant="ghost"
                             size="sm"
                             className="text-gray-400 hover:text-white h-8"
-                            onClick={(e) => {
+                            onClick={(e: React.MouseEvent) => {
                               e.stopPropagation();
                               handleOpenSharingModal(calendar);
                             }}

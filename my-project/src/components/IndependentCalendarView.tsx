@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
 import { VisuallyHidden } from './ui/visually-hidden';
-import HeaderV3 from './HeaderV3';
-import { IndependentCalendarProvider, useIndependentCalendar } from './IndependentCalendarProvider';
-import { Calendar } from '../types/calendar';
+
+import { IndependentCalendarProvider } from './IndependentCalendarProvider';
+import type { Calendar } from '../types/calendar';
 import { Toaster } from './ui/sonner';
 import IndependentCalendarCore from './IndependentCalendarCore';
-import IndependentBottomPanel from './IndependentBottomPanel';
+
 
 interface IndependentCalendarViewProps {
   calendar: Calendar;
@@ -125,7 +125,6 @@ const IndependentCalendarView: React.FC<IndependentCalendarViewProps> = ({
     >
       <IndependentCalendarProvider 
         sourceCalendar={calendar} 
-        instanceId={`independent-${calendar.id}-${Date.now()}`}
       >
         {/* Calendar Info Banner - Draggable Header */}
         <div 

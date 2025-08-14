@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { Event, EventCategory, ViewMode, CalendarState, Calendar } from '../types/calendar';
+import type { Event, EventCategory, ViewMode, CalendarState, Calendar } from '../types/calendar';
 
 type CalendarAction = 
   | { type: 'SET_CURRENT_DATE'; payload: Date }

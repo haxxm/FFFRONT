@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   ChevronDown, 
   User, 
   Menu,
-  Moon, 
-  Sun,
   Grid3X3,
   List,
   Calendar as CalendarIcon
@@ -14,7 +12,7 @@ import {
 import { Button } from './ui/button';
 
 import { useCalendar } from '../contexts/CalendarContext';
-import { ViewMode } from '../types/calendar';
+import type { ViewMode } from '../types/calendar';
 import MenuModal from './MenuModal';
 import PastScheduleModal from './PastScheduleModal';
 
@@ -66,21 +64,11 @@ const HeaderV3 = () => {
     setShowMonthDropdown(false);
   };
 
-  const handleViewModeChange = (mode: ViewMode) => {
-    dispatch({ type: 'SET_VIEW_MODE', payload: mode });
-  };
+  
 
-  const toggleDarkMode = () => {
-    dispatch({ type: 'TOGGLE_DARK_MODE' });
-  };
+  
 
-  const getViewModeIcon = (mode: ViewMode) => {
-    switch (mode) {
-      case 'month': return Grid3X3;
-      case 'week': return List;
-      case 'day': return CalendarIcon;
-    }
-  };
+  
 
   return (
     <div className="bg-background">

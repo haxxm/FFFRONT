@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -13,19 +13,15 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useCalendar } from '../contexts/CalendarContext';
-import { ViewMode } from '../types/calendar';
+import type { ViewMode } from '../types/calendar';
 import YearMonthSelector from './YearMonthSelector';
 
 const HeaderV2 = () => {
   const { state, dispatch, navigateMonth, goToToday } = useCalendar();
 
-  const monthNames = [
-    '1월', '2월', '3월', '4월', '5월', '6월',
-    '7월', '8월', '9월', '10월', '11월', '12월'
-  ];
+  
 
-  const currentMonth = state.currentDate.getMonth();
-  const currentYear = state.currentDate.getFullYear();
+  
 
   const handleViewModeChange = (mode: ViewMode) => {
     dispatch({ type: 'SET_VIEW_MODE', payload: mode });
@@ -43,13 +39,7 @@ const HeaderV2 = () => {
     }
   };
 
-  const getViewModeLabel = (mode: ViewMode) => {
-    switch (mode) {
-      case 'month': return '월간';
-      case 'week': return '주간';
-      case 'day': return '일간';
-    }
-  };
+  
 
   return (
     <div className="sticky top-0 z-10 bg-background border-b border-border px-4 py-3">

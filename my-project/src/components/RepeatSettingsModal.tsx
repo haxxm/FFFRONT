@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Calendar as CalendarIcon, X } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -83,7 +83,7 @@ const RepeatSettingsModal: React.FC<RepeatSettingsModalProps> = ({
             <label className="text-sm font-medium">반복 일정</label>
             <Switch
               checked={settings.enabled}
-              onCheckedChange={(enabled) => setSettings({ ...settings, enabled })}
+              onCheckedChange={(enabled: boolean) => setSettings({ ...settings, enabled })}
             />
           </div>
 
