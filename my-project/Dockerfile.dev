@@ -1,0 +1,16 @@
+
+FROM node:18
+
+WORKDIR /app
+
+# 의존성 먼저 설치 (캐시 활용)
+COPY package*.json ./
+RUN npm ci
+
+# 소스는 볼륨으로 마운트해서 핫리로드하므로 COPY하지 않음
+
+# Vite 개발 서버 포트 노출
+EXPOSE 5173
+
+# 컨테이너 안에서 실행할 기본 명령 (외부 접속을 위해 --host 추가)
+CMD ["npm", "run", "dev", "--", "--host"]

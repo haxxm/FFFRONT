@@ -1,9 +1,7 @@
 "use client";
 
-import type { TooltipProps, LegendProps } from "recharts"; // Import these types directly from recharts
-
-type TooltipPayload = TooltipProps['payload'][number];
-type LegendPayload = LegendProps['payload'][number];
+import * as React from "react";
+import * as RechartsPrimitive from "recharts";
 
 import { cn } from "./utils";
 
@@ -120,9 +118,7 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> & {
-    payload?: TooltipPayload[]; // Corrected type
-  } &
+}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
   React.ComponentProps<"div"> & {
     hideLabel?: boolean;
     hideIndicator?: boolean;
@@ -140,14 +136,10 @@ function ChartTooltipContent({
     const [item] = payload;
     const key = `${labelKey || item?.dataKey || item?.name || "value"}`;
     const itemConfig = getPayloadConfigFromPayload(config, item, key);
-    let value: React.ReactNode;
-
-    if (!labelKey && typeof label === "string" && (label in config)) {
-      const labelString: string = label; // Narrow the type to string
-      value = config[labelString as keyof ChartConfig]?.label || labelString;
-    } else {
-      value = itemConfig?.label;
-    }
+    const value =
+      !labelKey && typeof label === "string"
+        ? config[label as keyof typeof config]?.label || label
+        : itemConfig?.label;
 
     if (labelFormatter) {
       return (
@@ -187,7 +179,7 @@ function ChartTooltipContent({
     >
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
-        {payload.map((item: TooltipPayload, index: number) => {
+        {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || "value"}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
           const indicatorColor = color || item.payload.fill || item.color;
@@ -264,10 +256,8 @@ function ChartLegendContent({
   payload,
   verticalAlign = "bottom",
   nameKey,
-}: React.ComponentProps<"div"> & {
-    payload?: LegendPayload[]; // Corrected type
-    verticalAlign?: "top" | "middle" | "bottom"; // Corrected type
-  } & {
+}: React.ComponentProps<"div"> &
+  Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
     hideIcon?: boolean;
     nameKey?: string;
   }) {
@@ -285,7 +275,7 @@ function ChartLegendContent({
         className,
       )}
     >
-      {payload.map((item: LegendPayload) => {
+      {payload.map((item) => {
         const key = `${nameKey || item.dataKey || "value"}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
@@ -313,7 +303,6 @@ function ChartLegendContent({
     </div>
   );
 }
-
 
 // Helper to extract item config from a payload.
 function getPayloadConfigFromPayload(
@@ -362,4 +351,3 @@ export {
   ChartLegendContent,
   ChartStyle,
 };
-
