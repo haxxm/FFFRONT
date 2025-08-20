@@ -9,19 +9,7 @@ import { Separator } from './ui/separator';
 import { ScrollArea } from './ui/scroll-area';
 import { Calendar as CalendarIcon, Clock, Plus, FileText, Trash2, Check, X, Edit3, Image as ImageIcon, Camera, Upload } from 'lucide-react';
 import { toast } from 'sonner';
-
-interface Event {
-  id: string;
-  title: string;
-  content: string;
-  startDate: Date;
-  endDate: Date;
-  startTime: string;
-  endTime: string;
-  color: string;
-  calendarId: string;
-  images?: string[];
-}
+import type { Event, Calendar } from '../types';
 
 interface DayEventsDialogProps {
   open: boolean;
@@ -199,16 +187,16 @@ export function DayEventsDialog({
 
   const formatEventTime = (event: Event) => {
     // 시작일과 종료일이 같은 날인지 확인
-    const isSameDay = event.startDate.toDateString() === event.endDate.toDateString();
+                const isSameDay = event.date?.toDateString() === event.endDate?.toDateString();
     
     if (isSameDay) {
       // 같은 날이면 시간만 표시
       return `${formatTime(event.startTime)} - ${formatTime(event.endTime)}`;
     } else {
       // 다른 날이면 날짜와 시간 모두 표시
-      const startDateStr = event.startDate.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
-      const endDateStr = event.endDate.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
-      return `${startDateStr} ${formatTime(event.startTime)} - ${endDateStr} ${formatTime(event.endTime)}`;
+                                    const startDateStr = event.date?.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+      const endDateStr = event.endDate?.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+      return `${startDateStr} ${formatTime(event.startTime || '00:00')} - ${endDateStr} ${formatTime(event.endTime || '00:00')}`;
     }
   };
 
@@ -320,7 +308,7 @@ export function DayEventsDialog({
                               />
                             </div>
                             <Textarea
-                              value={editingEvent.content || ''}
+                              value={editingEvent.description || ''}
                               onChange={(e) => setEditingEvent(prev => ({ ...prev, content: e.target.value }))}
                               placeholder="이벤트 설명"
                               className="text-sm min-h-[60px] resize-none"
@@ -362,8 +350,8 @@ export function DayEventsDialog({
                               {event.content && (
                                 <div className="flex items-start space-x-2">
                                   <FileText className="h-3 w-3 mt-0.5 text-muted-foreground flex-shrink-0" />
-                                  <p className={`text-sm text-muted-foreground leading-relaxed ${!isExpanded && event.content.length > 100 ? 'line-clamp-2' : ''}`}>
-                                    {event.content}
+                                  <p className={`text-sm text-muted-foreground leading-relaxed ${!isExpanded && event.description && event.description.length > 100 ? 'line-clamp-2' : ''}`}>
+                                    {event.description}
                                   </p>
                                 </div>
                               )}
@@ -418,7 +406,7 @@ export function DayEventsDialog({
                               )}
 
                               {/* 더보기/접기 버튼 */}
-                              {(event.content && event.content.length > 100) || (event.images && event.images.length > 3) ? (
+                              {(event.description && event.description.length > 100) || (event.images && event.images.length > 3) ? (
                                 <Button
                                   variant="ghost"
                                   size="sm"

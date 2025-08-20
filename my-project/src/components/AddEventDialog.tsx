@@ -8,29 +8,32 @@ import { ScrollArea } from './ui/scroll-area';
 import { Calendar as CalendarIcon, Clock, CalendarDays, Camera, X, Image as ImageIcon, Palette } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Label } from './ui/label';
+import { ScrollArea } from './ui/scroll-area';
+import { Calendar as CalendarIcon, Clock, CalendarDays, Camera, X, Image as ImageIcon, Palette } from 'lucide-react';
+import { toast } from 'sonner';
+import { addSchedule } from '../api';
+import type { CalendarEvent } from '../types';
+
 interface AddEventDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   selectedDate: Date | null;
-  calendarId: string;
-  onAddEvent: (event: {
-    title: string;
-    content: string;
-    startDate: Date;
-    endDate: Date;
-    startTime: string;
-    endTime: string;
-    color: string;
-    images?: string[];
-  }) => void;
+  calendarNum: number; // Changed from calendarId to calendarNum
+  onSuccess: () => void; // Callback for successful event addition
 }
 
 export function AddEventDialog({ 
   open, 
   onOpenChange, 
   selectedDate, 
-  calendarId,
-  onAddEvent 
+  calendarNum,
+  onSuccess
 }: AddEventDialogProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -41,7 +44,6 @@ export function AddEventDialog({
   const [selectedColor, setSelectedColor] = useState('rgb(176, 224, 230)');
   const [images, setImages] = useState<string[]>([]);
 
-  // 파스텔 색상 목록
   const colorOptions = [
     { value: 'rgb(255, 182, 193)', label: '베이비핑크' },
     { value: 'rgb(247, 202, 201)', label: '로즈쿼츠' },
@@ -49,57 +51,39 @@ export function AddEventDialog({
     { value: 'rgb(176, 224, 230)', label: '파우더블루' },
     { value: 'rgb(189, 236, 182)', label: '민트그린' },
     { value: 'rgb(255, 253, 208)', label: '크림옐로' },
-    { value: 'rgb(255, 239, 184)', label: '버터' },
     { value: 'rgb(255, 218, 185)', label: '피치' },
-    { value: 'rgb(230, 223, 250)', label: '페일퍼플' },
-    { value: 'rgb(255, 240, 245)', label: '화이트핑크' },
-    { value: 'rgb(255, 200, 164)', label: '애프리콧' },
-    { value: 'rgb(197, 225, 197)', label: '세이지민트' },
-    { value: 'rgb(135, 206, 235)', label: '스카이블루' },
-    { value: 'rgb(250, 192, 181)', label: '연살몬핑크' },
-    { value: 'rgb(245, 234, 200)', label: '바닐라' },
-    { value: 'rgb(230, 220, 240)', label: '페일라일락' },
-    { value: 'rgb(192, 242, 233)', label: '소프트민트' },
-    { value: 'rgb(173, 216, 230)', label: '베이비블루' },
-    { value: 'rgb(255, 160, 160)', label: '파스텔코랄' },
-    { value: 'rgb(255, 250, 205)', label: '레몬크림' }
+    { value: 'rgb(230, 223, 250)', label: '페일퍼플' }
   ];
 
-  // selectedDate가 변경될 때 시작일과 종료일 초기화
-  useEffect(() => {
-    if (selectedDate) {
-      setStartDate(selectedDate);
-      setEndDate(selectedDate);
-    }
-  }, [selectedDate]);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!startDate || !endDate || !title.trim()) return;
 
-    onAddEvent({
-      title: title.trim(),
-      content: content.trim(),
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-      color: selectedColor,
-      images: images.length > 0 ? images : undefined
-    });
+    const startDateTime = new Date(startDate);
+    const [startHours, startMinutes] = startTime.split(':').map(Number);
+    startDateTime.setHours(startHours, startMinutes);
 
-    // 성공 토스트 표시
-    toast.success(`"${title.trim()}" 이벤트가 추가되었습니다`);
+    const endDateTime = new Date(endDate);
+    const [endHours, endMinutes] = endTime.split(':').map(Number);
+    endDateTime.setHours(endHours, endMinutes);
 
-    // 폼 초기화 및 다이얼로그 닫기
-    setTitle('');
-    setContent('');
-    setStartTime('12:00');
-    setEndTime('13:00');
-    setSelectedColor('rgb(176, 224, 230)');
-    setImages([]);
-    onOpenChange(false);
+    const newEvent: Omit<CalendarEvent, 'event_num'> = {
+      calendar_num: calendarNum,
+      event_st_data: startDateTime.toISOString(),
+      event_end_data: endDateTime.toISOString(),
+      event_content: title.trim(), // Assuming title is the main content
+      // color and images are not in the API spec for the event itself
+    };
+
+    try {
+      await addSchedule(newEvent);
+      toast.success(`"${title.trim()}" 이벤트가 추가되었습니다`);
+      onSuccess(); // Notify parent component
+      handleClose(); // Close and reset form
+    } catch (error) {
+      toast.error("이벤트 추가에 실패했습니다.");
+    }
   };
 
   const handleClose = () => {

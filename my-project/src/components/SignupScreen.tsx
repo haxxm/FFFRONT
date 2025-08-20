@@ -1,8 +1,8 @@
 import { Button } from './ui/button';
 import { X } from 'lucide-react';
-import whiteantLogo from '../assets/images/whiteant.svg';
-import naverLogo from '../assets/images/naver.svg';
-import kakaoLogo from '../assets/images/kakao.svg';
+import antogetherlogo from '../assets/images/antogether-logo.svg';
+import naverlogo from '../assets/images/naver-logo.svg';
+import kakaologo from '../assets/images/kakao-logo.svg';
 import googleLogo from '../assets/images/google.svg';
 import appleLogo from '../assets/images/Apple.svg';
 
@@ -33,7 +33,7 @@ export function SignupScreen({ onSocialSignup, onShowRegularSignup, onBack }: Si
         <div className="text-center space-y-6 mt-16">
           <div className="w-80 h-60 mx-auto p-6 bg-[#0E0E0E]">
             <img 
-              src={whiteantLogo} 
+              src={antogetherlogo} 
               alt="antogether logo" 
               className="w-full h-full object-contain"
             />
@@ -47,7 +47,7 @@ export function SignupScreen({ onSocialSignup, onShowRegularSignup, onBack }: Si
             className="w-full h-12 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center space-x-2 transition-colors"
           >
             <img 
-              src={naverLogo} 
+              src={naverlogo} 
               alt="Naver" 
               className="w-6 h-6 object-contain"
             />
@@ -59,7 +59,7 @@ export function SignupScreen({ onSocialSignup, onShowRegularSignup, onBack }: Si
             className="w-full h-12 bg-[#FAE200] hover:bg-[#E6CC00] text-black rounded-full flex items-center justify-center space-x-2 transition-colors"
           >
             <img 
-              src={kakaoLogo} 
+              src={kakaologo} 
               alt="Kakao" 
               className="w-6 h-6 object-contain"
             />

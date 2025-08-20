@@ -8,44 +8,40 @@ import { Badge } from './ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from './ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
 import { Plus, Share2, Calendar as CalendarIcon, Users, MessageSquare, Palette, Trash2, LogOut } from 'lucide-react';
-import whiteantLogo from '../assets/images/whiteant.svg';
-
-export interface CalendarItem {
-  id: string;
-  name: string;
-  purpose: string;
-  color: string;
-  isActive: boolean;
-  memberCount: number;
-}
+import antogetherlogo from '../assets/images/antogether-logo.svg';
+import type { Calendar } from '../types';
 
 interface CalendarSidebarProps {
   onCommunityClick?: (calendarId: string) => void;
   onCalendarClick?: (calendarId: string) => void;
-  onCreateCalendar?: (calendar: CalendarItem) => void;
+  onCreateCalendar?: (calendar: Calendar) => void;
   onDeleteCalendar?: (calendarId: string) => void;
-  calendars?: CalendarItem[];
+  calendars?: Calendar[];
   user?: { email: string; name: string } | null;
   onLogout?: () => void;
 }
 
-export function CalendarSidebar({ 
-  onCommunityClick, 
-  onCalendarClick, 
-  onCreateCalendar, 
+export function CalendarSidebar({
+  onCommunityClick,
+  onCalendarClick,
+  onCreateCalendar,
   onDeleteCalendar,
   calendars: externalCalendars,
   user,
   onLogout
 }: CalendarSidebarProps) {
-  const [internalCalendars, setInternalCalendars] = useState<CalendarItem[]>([
+  const [internalCalendars, setInternalCalendars] = useState<Calendar[]>([
     {
       id: '1',
       name: '게임 스케줄',
       purpose: '게임',
       color: 'rgb(176, 224, 230)', // 파우더블루
       isActive: true,
-      memberCount: 12
+      memberCount: 12,
+      description: '',
+      isVisible: true,
+      isDefault: false,
+      createdAt: new Date(),
     },
     {
       id: '2',
@@ -53,7 +49,11 @@ export function CalendarSidebar({
       purpose: '운동',
       color: 'rgb(189, 236, 182)', // 민트그린
       isActive: false,
-      memberCount: 5
+      memberCount: 5,
+      description: '',
+      isVisible: true,
+      isDefault: false,
+      createdAt: new Date(),
     }
   ]);
 
@@ -80,13 +80,17 @@ export function CalendarSidebar({
   const handleCreateCalendar = () => {
     if (!newCalendarName.trim() || !newCalendarPurpose.trim()) return;
     
-    const newCalendar: CalendarItem = {
+    const newCalendar: Calendar = {
       id: Date.now().toString(),
       name: newCalendarName.trim(),
       purpose: newCalendarPurpose.trim(),
       color: newCalendarColor,
       isActive: false,
-      memberCount: 1
+      memberCount: 1,
+      description: '',
+      isVisible: true,
+      isDefault: false,
+      createdAt: new Date(),
     };
     
     if (onCreateCalendar) {
@@ -149,7 +153,7 @@ export function CalendarSidebar({
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-[rgba(0,0,0,1)] rounded-full flex items-center justify-center border border-border">
                 <img 
-                  src={whiteantLogo} 
+                  src={antogetherlogo} 
                   alt="antogether logo" 
                   className="h-8 w-8 object-contain"
                 />

@@ -4,22 +4,10 @@ import { Card } from './ui/card';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 import { Badge } from './ui/badge';
-import { Send, User, Calendar, Clock, Bot, Search, Plus, CheckCircle, XCircle } from 'lucide-react';
-import whiteantLogo from '../assets/images/whiteant.svg';
+import { Send, User, Calendar as CalendarIcon, Clock, Bot, Search, Plus, CheckCircle, XCircle } from 'lucide-react';
+import antogetherlogo from '../assets/images/antogether-logo.svg';
 import { toast } from 'sonner';
-
-interface Event {
-  id: string;
-  title: string;
-  content: string;
-  startDate: Date;
-  endDate: Date;
-  startTime: string;
-  endTime: string;
-  color: string;
-  calendarId: string;
-  images?: string[];
-}
+import type { Event, Calendar } from '../types';
 
 interface Message {
   id: string;
@@ -41,21 +29,8 @@ interface Message {
 
 interface ChatBotProps {
   currentCalendarId?: string;
-  calendars?: Array<{
-    id: string;
-    name: string;
-    color: string;
-  }>;
-  onAddEvent?: (eventData: {
-    title: string;
-    content: string;
-    startDate: Date;
-    endDate: Date;
-    startTime: string;
-    endTime: string;
-    color: string;
-    images?: string[];
-  }) => void;
+  calendars?: Calendar[];
+  onAddEvent?: (eventData: Omit<Event, 'id' | 'images'>) => void;
 }
 
 export function ChatBot({ currentCalendarId, calendars = [], onAddEvent }: ChatBotProps) {
@@ -288,7 +263,7 @@ export function ChatBot({ currentCalendarId, calendars = [], onAddEvent }: ChatB
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center border border-border overflow-hidden">
             <img 
-              src={whiteantLogo} 
+              src={antogetherlogo} 
               alt="antogether logo" 
               className="w-6 h-6 object-contain"
             />
@@ -337,7 +312,7 @@ export function ChatBot({ currentCalendarId, calendars = [], onAddEvent }: ChatB
                           
                           <div className="grid grid-cols-1 gap-2 text-sm">
                             <div className="flex items-center space-x-2">
-                              <Calendar className="h-4 w-4 text-muted-foreground" />
+                              <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                               <span className="text-muted-foreground">
                                 {message.suggestedEvent.startDate.toDateString() === message.suggestedEvent.endDate.toDateString() 
                                   ? formatDate(message.suggestedEvent.startDate)

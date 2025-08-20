@@ -3,27 +3,39 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Eye, EyeOff } from 'lucide-react';
 
-import AntogetherLogo from '../assets/images/whiteant.svg';
+import antogetherlogo from '../assets/images/antogether-logo.svg';
 import AppleLogo from '../assets/images/Apple.svg';
 import GoogleLogo from '../assets/images/google.svg';
-import KakaoLogo from '../assets/images/kakao.svg';
-import NaverLogo from '../assets/images/naver.svg';
+import kakaologo from '../assets/images/kakao-logo.svg';
+import naverlogo from '../assets/images/naver-logo.svg';
+
+import api from '../api';
+import type { User } from '../types';
 
 interface AuthScreenProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (userData: User) => void;
   onSocialLogin: (provider: 'naver' | 'kakao' | 'google' | 'apple') => void;
   onShowSignup: () => void;
 }
 
 export function AuthScreen({ onLogin, onSocialLogin, onShowSignup }: AuthScreenProps) {
-  const [email, setEmail] = useState('');
+  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
-      onLogin(email, password);
+    if (userId && password) {
+      try {
+        // Assuming login requires user_id and password. The API spec shows user_mail is also possible.
+        // Adjust as needed based on exact login requirements.
+        const response = await api.login({ userId: userId, userPw: password });
+        onLogin(response.user);
+      } catch (error) {
+        // Here you could show an error message to the user
+        console.error("Login failed", error);
+        alert("로그인에 실패했습니다.");
+      }
     }
   };
 
@@ -51,7 +63,7 @@ export function AuthScreen({ onLogin, onSocialLogin, onShowSignup }: AuthScreenP
         <div className="text-center space-y-6 mt-16">
           <div className="w-80 h-60 mx-auto p-6 bg-[#0E0E0E]">
             <img 
-              src={AntogetherLogo} 
+              src={antogetherlogo} 
               alt="ANT TOGETHER" 
               className="w-full h-full object-contain"
             />
@@ -67,10 +79,10 @@ export function AuthScreen({ onLogin, onSocialLogin, onShowSignup }: AuthScreenP
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-3">
               <Input
-                type="email"
+                type="text"
                 placeholder="antogether ID"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
                 className="w-full h-12 bg-white/90 text-white rounded-full px-4 border-0 placeholder:text-gray-400"
                 required
               />
@@ -120,7 +132,7 @@ export function AuthScreen({ onLogin, onSocialLogin, onShowSignup }: AuthScreenP
               title="네이버로 로그인"
             >
               <img
-                src={NaverLogo}
+                src={naverlogo}
                 alt="네이버 로고"
                 className="w-8 h-8 object-contain"
               />
@@ -131,7 +143,7 @@ export function AuthScreen({ onLogin, onSocialLogin, onShowSignup }: AuthScreenP
               title="카카오로 로그인"
             >
               <img
-                src={KakaoLogo}
+                src={kakaologo}
                 alt="카카오 로고"
                 className="w-8 h-8 object-contain"
               />

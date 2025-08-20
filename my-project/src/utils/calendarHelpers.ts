@@ -1,13 +1,4 @@
-interface Event {
-  id: string;
-  title: string;
-  startDate: Date;
-  endDate: Date;
-  startTime: string;
-  endTime: string;
-  color: string;
-  calendarId: string;
-}
+import type { CalendarEvent } from '../types';
 
 export const getDaysInMonth = (date: Date) => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -38,13 +29,13 @@ export const getMonthOptions = () => {
   return Array.from({ length: 12 }, (_, i) => i);
 };
 
-export const getEventsForDate = (date: number, currentDate: Date, events: Event[]) => {
+export const getEventsForDate = (date: number, currentDate: Date, events: CalendarEvent[]) => {
   const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), date);
   targetDate.setHours(0, 0, 0, 0);
   
   return events.filter(event => {
-    const eventStartDate = new Date(event.startDate);
-    const eventEndDate = new Date(event.endDate);
+    const eventStartDate = new Date(event.event_st_data);
+    const eventEndDate = new Date(event.event_end_data);
     
     // 시간 정보를 제거하고 날짜만 비교
     eventStartDate.setHours(0, 0, 0, 0);

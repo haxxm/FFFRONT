@@ -3,37 +3,32 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Checkbox } from './ui/checkbox';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import whiteantLogo from '../assets/images/whiteant.svg';
+import antogetherlogo from '../assets/images/antogether-logo.svg';
+import { registerUser } from '../api';
+import type { User } from '../types';
 
 interface RegularSignupFormProps {
-  onSignup: (data: {
-    email: string;
-    password: string;
-    confirmPassword: string;
-    name: string;
-    phone: string;
-    agreeTerms: boolean;
-    agreePrivacy: boolean;
-  }) => void;
+  onSignupSuccess: () => void;
   onBack: () => void;
 }
 
-export function RegularSignupForm({ onSignup, onBack }: RegularSignupFormProps) {
+export function RegularSignupForm({ onSignupSuccess, onBack }: RegularSignupFormProps) {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    user_id: '',
+    user_mail: '',
+    user_pass: '',
     confirmPassword: '',
-    name: '',
-    phone: '',
+    user_name: '',
+    user_phone: '',
     agreeTerms: false,
     agreePrivacy: false
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.user_pass !== formData.confirmPassword) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
@@ -41,7 +36,22 @@ export function RegularSignupForm({ onSignup, onBack }: RegularSignupFormProps) 
       alert('이용약관과 개인정보처리방침에 동의해주세요.');
       return;
     }
-    onSignup(formData);
+    
+    try {
+      const userData: Omit<User, 'user_num'> = {
+        user_id: formData.user_id,
+        user_mail: formData.user_mail,
+        user_pass: formData.user_pass,
+        user_name: formData.user_name,
+        user_phone: formData.user_phone,
+      };
+      await registerUser(userData as User);
+      alert('회원가입에 성공했습니다!');
+      onSignupSuccess();
+    } catch (error) {
+      console.error("Signup failed", error);
+      alert("회원가입에 실패했습니다.");
+    }
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -69,7 +79,7 @@ export function RegularSignupForm({ onSignup, onBack }: RegularSignupFormProps) 
             <div className="w-12 h-12 mx-auto mb-3">
               <div className="w-full h-full bg-white rounded-lg flex items-center justify-center p-2">
                 <img 
-                  src={whiteantLogo} 
+                  src={antogetherlogo} 
                   alt="antogether logo" 
                   className="w-full h-full object-contain"
                 />
@@ -82,10 +92,18 @@ export function RegularSignupForm({ onSignup, onBack }: RegularSignupFormProps) 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-3">
               <Input
+                type="text"
+                placeholder="아이디"
+                value={formData.user_id}
+                onChange={(e) => handleInputChange('user_id', e.target.value)}
+                className="w-full h-12 bg-white text-black rounded-full px-4 border-0 placeholder:text-gray-400"
+                required
+              />
+              <Input
                 type="email"
                 placeholder="이메일"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
+                value={formData.user_mail}
+                onChange={(e) => handleInputChange('user_mail', e.target.value)}
                 className="w-full h-12 bg-white text-black rounded-full px-4 border-0 placeholder:text-gray-400"
                 required
               />
@@ -94,8 +112,8 @@ export function RegularSignupForm({ onSignup, onBack }: RegularSignupFormProps) 
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="비밀번호"
-                  value={formData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  value={formData.user_pass}
+                  onChange={(e) => handleInputChange('user_pass', e.target.value)}
                   className="w-full h-12 bg-white text-black rounded-full px-4 pr-12 border-0 placeholder:text-gray-400"
                   required
                 />
@@ -129,8 +147,8 @@ export function RegularSignupForm({ onSignup, onBack }: RegularSignupFormProps) 
               <Input
                 type="text"
                 placeholder="이름"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
+                value={formData.user_name}
+                onChange={(e) => handleInputChange('user_name', e.target.value)}
                 className="w-full h-12 bg-white text-black rounded-full px-4 border-0 placeholder:text-gray-400"
                 required
               />
@@ -138,8 +156,8 @@ export function RegularSignupForm({ onSignup, onBack }: RegularSignupFormProps) 
               <Input
                 type="tel"
                 placeholder="휴대폰 번호"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
+                value={formData.user_phone}
+                onChange={(e) => handleInputChange('user_phone', e.target.value)}
                 className="w-full h-12 bg-white text-black rounded-full px-4 border-0 placeholder:text-gray-400"
                 required
               />

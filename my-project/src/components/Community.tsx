@@ -19,24 +19,8 @@ import {
   Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { createCommunityPost } from '../api';
-
-interface Comment {
-  id: string;
-  content: string;
-  author: string;
-  timestamp: Date;
-  announcementId: string;
-}
-
-interface Announcement {
-  id: string;
-  title: string;
-  content: string;
-  author: string;
-  timestamp: Date;
-  isPinned: boolean;
-}
+import api from '../api';
+import type { Comment, Announcement } from '../types';
 
 interface CommunityProps {
   calendarId: string;
@@ -101,7 +85,7 @@ export function Community({
     }
 
     try {
-      await createCommunityPost({ title: newPostTitle, content: newPostContent });
+      await api.createCommunityPost({ title: newPostTitle, content: newPostContent });
       setNewPostTitle('');
       setNewPostContent('');
       setShowNewPostForm(false);

@@ -4,37 +4,23 @@ import { Badge } from './ui/badge';
 import { ChevronLeft, ChevronRight, ChevronDown, ArrowLeft, Bell, Plus } from 'lucide-react';
 import { NotificationToast } from './NotificationToast';
 import { sendNotificationResponse, fetchNotifications } from '../utils/notificationApi';
-import { 
-  getDaysInMonth, 
-  getFirstDayOfMonth, 
-  formatYear, 
-  formatMonth, 
-  getYearOptions, 
-  getMonthOptions, 
-  getEventsForDate 
-} from '../utils/calendarHelpers';
+import { getDaysInMonth, getFirstDayOfMonth, formatYear, formatMonth, getYearOptions, getMonthOptions, getEventsForDate } from '../utils/calendarHelpers';
 import { DAY_HEADERS, CALENDAR_INFO, TOTAL_CALENDAR_CELLS } from '../constants/calendar';
+import type { CalendarEvent } from '../types';
 
-interface Event {
-  id: string;
-  title: string;
-  startDate: Date;
-  endDate: Date;
-  startTime: string;
-  endTime: string;
-  color: string;
-  calendarId: string;
-}
+// The local Event interface is now replaced by CalendarEvent
 
 interface CalendarViewProps {
   calendarId?: string;
   calendarName?: string;
   currentDate?: Date;
-  events?: Event[];
+  events?: CalendarEvent[]; // Use CalendarEvent[]
   onDateChange?: (newDate: Date) => void;
   onDateClick?: (date: Date) => void;
   onBackToList?: () => void;
-  onDeleteEvent?: (eventId: string) => void;
+  onDeleteEvent?: (eventId: number) => void; // eventId is a number
+  onAddEvent?: (eventData: Omit<CalendarEvent, "event_num">) => Promise<void>;
+  onUpdateEvent?: (eventId: number, updatedData: Partial<CalendarEvent>) => Promise<void>;
 }
 
 export function CalendarView({ 
@@ -183,13 +169,20 @@ export function CalendarView({
             {date}
           </div>
           <div className="w-full space-y-1 absolute top-14 lg:top-16 left-0 right-0 overflow-hidden">
-            {dayEvents.slice(0, 2).map((event) => {
+            {dayEvents.slice(0, 2).map((event: CalendarEvent) => {
+              // The event color is not part of the CalendarEvent spec.
+              // We'll use a default color or derive it from calendar info.
+              const eventColor = currentCalendar?.color || '#3b82f6'; // Default to blue
+
+              const startDate = new Date(event.event_st_data);
+              const endDate = new Date(event.event_end_data);
+
               // 이벤트가 여러 날에 걸치는지 확인
-              const isMultiDay = event.startDate.toDateString() !== event.endDate.toDateString();
+              const isMultiDay = startDate.toDateString() !== endDate.toDateString();
               // 현재 날짜가 시작일인지 확인
               const currentDateObj = new Date(effectiveCurrentDate.getFullYear(), effectiveCurrentDate.getMonth(), date);
-              const isStartDate = event.startDate.toDateString() === currentDateObj.toDateString();
-              const isEndDate = event.endDate.toDateString() === currentDateObj.toDateString();
+              const isStartDate = startDate.toDateString() === currentDateObj.toDateString();
+              const isEndDate = endDate.toDateString() === currentDateObj.toDateString();
               
               const handleEventClick = (e: React.MouseEvent) => {
                 e.stopPropagation();
@@ -253,17 +246,17 @@ export function CalendarView({
 
               return (
                 <div 
-                  key={event.id} 
+                  key={event.event_num} 
                   className={`text-white text-[10px] lg:text-xs py-0.5 lg:py-1 ${barStyle.paddingClass} ${barStyle.rounded} ${barStyle.marginClass} cursor-pointer hover:opacity-80 transition-opacity h-4 lg:h-5 flex items-center relative z-10`}
                   onClick={handleEventClick}
-                  title={`${event.title} - 클릭하여 자세히 보기`}
+                  title={`${event.event_content} - 클릭하여 자세히 보기`}
                   style={{
-                    backgroundColor: event.color,
+                    backgroundColor: eventColor,
                     width: barStyle.width
                   }}
                 >
                   <div className="truncate w-full">
-                    {barStyle.textVisible ? event.title : ''}
+                    {barStyle.textVisible ? event.event_content : ''}
                   </div>
                 </div>
               );

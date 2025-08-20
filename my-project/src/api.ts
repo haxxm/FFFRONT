@@ -1,245 +1,58 @@
-import axios from 'axios';
+import axios, { type AxiosRequestHeaders } from 'axios';
+import type { User, CalendarEvent, CommunityPost, AuthResponse } from './types';
 
-import type { Event } from './types/calendar';
+// 1. 원하시는 백엔드 주소를 상수로 지정합니다.
+const API_BASE_URL = 'http://192.168.18.120:5000/api';
 
-const apiClient = axios.create({
-  baseURL: '/api', // API base URL
-  headers: {
-    'Content-Type': 'application/json',
+const apiInstance = axios.create({ baseURL: API_BASE_URL, headers:{'Content-Type':'application/json'} });
+
+// 2. 모든 API 함수들을 하나의 객체에 담습니다.
+const api = {
+  // --- Auth ---
+  login: async (username: string, password: string): Promise<AuthResponse> => {
+    const response = await apiInstance.post('/auth/login', { userId: username, userPw: password });
+    if (response.data.accessToken) {
+      localStorage.setItem('accessToken', response.data.accessToken);
+    }
+    return response.data;
   },
+  // ... registerUser, logout 등 다른 Auth 함수들
+
+  // --- Calendar ---
+  fetchEvents: async (startDate: string, endDate: string): Promise<CalendarEvent[]> => {
+    const response = await apiInstance.get('/calendar/schedules', { params: { startDate, endDate } });
+    return response.data;
+  },
+  addEvent: async (eventData: Omit<CalendarEvent, 'eventNum'>): Promise<CalendarEvent> => {
+    const response = await apiInstance.post('/calendar/schedules', eventData);
+    return response.data;
+  },
+  updateEvent: async (id: number, eventData: Partial<CalendarEvent>): Promise<CalendarEvent> => {
+    const response = await apiInstance.put(`/calendar/schedules/${id}`, eventData);
+    return response.data;
+  },
+  deleteEvent: async (id: number): Promise<void> => {
+    await apiInstance.delete(`/calendar/schedules/${id}`);
+  },
+
+  // --- Community ---
+  fetchPosts: async (): Promise<CommunityPost[]> => {
+    const response = await apiInstance.get('/community/posts');
+    return response.data;
+  },
+  // ... createPost 등 다른 Community 함수들
+};
+
+// Axios 인터셉터 설정 (토큰 추가)
+apiInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    // 이전 헤더 타입 오류를 해결한 코드
+    (config.headers as AxiosRequestHeaders).Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
-// Helper function for error handling
-const handleApiError = (error: any) => {
-  console.error('API Error:', error.response ? error.response.data : error.message);
-  throw error;
-};
 
-// --- Auth ---
-
-export const registerUser = async (userData: any) => {
-  try {
-    const response = await apiClient.post('/auth/register', userData);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const login = async (credentials: any) => {
-  try {
-    const response = await apiClient.post('/auth/login', credentials);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const logout = async () => {
-  try {
-    const response = await apiClient.post('/auth/logout');
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-// --- Calendar ---
-
-export const getSchedules = async (startDate: string, endDate: string) => {
-  try {
-    const response = await apiClient.get('/calendar/schedules', {
-      params: { startDate, endDate },
-    });
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const getScheduleById = async (id: string) => {
-  try {
-    const response = await apiClient.get(`/calendar/schedules/${id}`);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const addSchedule = async (scheduleData: Partial<Event>) => {
-  try {
-    const response = await apiClient.post('/calendar/schedules', scheduleData);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const updateSchedule = async (id: string, scheduleData: Partial<Event>) => {
-  try {
-    const response = await apiClient.put(`/calendar/schedules/${id}`, scheduleData);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const deleteSchedule = async (id: string) => {
-  try {
-    const response = await apiClient.delete(`/calendar/schedules/${id}`);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const shareCalendar = async (id: string, targetUserId: string) => {
-  try {
-    const response = await apiClient.post(`/calendar/share/${id}`, { targetUserId });
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-// --- AI Agent ---
-
-export const uploadFile = async (file: File) => {
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
-    const response = await apiClient.post('/ai/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const chatWithAI = async (message: string) => {
-  try {
-    const response = await apiClient.post('/ai/chat', { message });
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const getAISuggestion = async () => {
-  try {
-    const response = await apiClient.get('/ai/suggestion');
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const planAlarms = async (planData: any) => {
-  try {
-    const response = await apiClient.post('/ai/alarms/plan', planData);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const suggestAlarms = async (scheduleId: number) => {
-  try {
-    const response = await apiClient.post('/ai/alarms/suggest', { scheduleId });
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const applyAlarms = async (scheduleId: number, choices: any[]) => {
-  try {
-    const response = await apiClient.post('/ai/alarms/apply', { scheduleId, choices });
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const getAlarms = async (scheduleId?: number) => {
-  try {
-    const response = await apiClient.get('/ai/alarms', {
-      params: { scheduleId },
-    });
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-export const deleteAlarm = async (id: string) => {
-  try {
-    const response = await apiClient.delete(`/ai/alarms/${id}`);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-// --- Additional Features ---
-
-/**
- * Add a friend
- * POST /api/friends
- * @param friendId The ID of the friend to add
- */
-export const addFriend = async (friendId: string) => {
-  try {
-    const response = await apiClient.post('/friends', { friendId });
-    return response.data; // { message: "친구 추가 완료" }
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-/**
- * Get community posts
- * GET /api/community/posts
- */
-export const getCommunityPosts = async () => {
-  try {
-    const response = await apiClient.get('/community/posts');
-    return response.data; // [{ id: 1, title: "게시글 제목", ... }]
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-/**
- * Create a community post
- * POST /api/community/posts
- * @param postData The data for the new post
- */
-export const createCommunityPost = async (postData: { title: string; content: string; }) => {
-  try {
-    const response = await apiClient.post('/community/posts', postData);
-    // The spec says the response is a stringified JSON, axios might parse it automatically.
-    // If not, we might need to do JSON.parse(response.data)
-    return response.data; // { id: 7001, message: "작성 완료" }
-  } catch (error) {
-    handleApiError(error);
-  }
-};
-
-/**
- * Create a comment on a community post
- * POST /api/community/posts/{id}/comments
- * @param postId The ID of the post to comment on
- * @param content The content of the comment
- */
-export const createCommunityComment = async (postId: string, content: string) => {
-  try {
-    const response = await apiClient.post(`/community/posts/${postId}/comments`, { content });
-    return response.data; // { comment_id: 8101, message: "댓글 등록 완료" }
-  } catch (error) {
-    handleApiError(error);
-  }
-};
+// 3. 완성된 api 객체를 default로 export 합니다.
+export default api;

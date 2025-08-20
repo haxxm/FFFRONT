@@ -9,21 +9,8 @@ export interface FeaturePanelProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   currentCalendarId?: string;
-  calendars?: Array<{
-    id: string;
-    name: string;
-    color: string;
-  }>;
-  onAddEvent?: (eventData: {
-    title: string;
-    content: string;
-    startDate: Date;
-    endDate: Date;
-    startTime: string;
-    endTime: string;
-    color: string;
-    images?: string[];
-  }) => void;
+  calendars?: Calendar[];
+  onAddEvent?: (eventData: Omit<Event, 'id' | 'images'>) => void;
 }
 
 type FeatureType = 'chat' | 'settings' | 'analytics' | 'team';
@@ -108,7 +95,7 @@ export function FeaturePanel({
         return (
           <div className="flex-1 flex items-center justify-center p-6">
             <div className="text-center text-muted-foreground">
-              <Calendar className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+              <CalendarIcon className="h-12 w-12 mx-auto mb-4 text-gray-300" />
               <h3 className="mb-2">분석 기능</h3>
               <p className="text-sm">일정 통계와 분석 기능이 곧 출시됩니다.</p>
             </div>
